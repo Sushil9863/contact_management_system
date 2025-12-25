@@ -127,6 +127,19 @@
         transform: translateY(-2px) scale(1.05);
         box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
     }
+    .nav-link-profile {
+        background: rgba(23, 62, 235, 0.25);
+        border: 1px solid rgba(40, 167, 69, 0.4);
+        color: #ffffff !important;
+        font-weight: 600;
+    }
+
+    .nav-link-profile:hover {
+        background: rgba(40, 167, 69, 0.35);
+        border-color: rgba(40, 167, 69, 0.6);
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+    }
 
     .nav-link-logout {
         background: rgba(220, 53, 69, 0.25);
@@ -226,17 +239,64 @@
         z-index: 10000;
         display: none;
     }
+
+    /* Dropdown Styles */
+.dropdown-menu {
+    min-width: 220px;
+}
+
+.dropdown-item {
+    color: rgba(255, 255, 255, 0.9) !important;
+    padding: 10px 15px !important;
+    border-radius: 8px;
+    margin: 3px 0;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: white !important;
+    transform: translateX(5px);
+}
+
+.dropdown-divider {
+    margin: 8px 0;
+}
+
+.dropdown-toggle::after {
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+/* Friend requests badge */
+#friendRequestsBadge {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    font-size: 0.7rem;
+    padding: 3px 7px;
+    border-radius: 10px;
+}
+
+/* Profile dropdown indicator */
+.nav-item.dropdown .nav-link {
+    position: relative;
+}
+
+.nav-item.dropdown .nav-link::after {
+    display: inline-block;
+    margin-left: 0.5em;
+    vertical-align: 0.255em;
+    content: "";
+    border-top: 0.3em solid;
+    border-right: 0.3em solid transparent;
+    border-bottom: 0;
+    border-left: 0.3em solid transparent;
+}
 </style>
 
 <!-- Choose one of these options for the brand class -->
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-        <!-- Brand with Icon - Choose one of these classes for best visibility:
-             - No class: White gradient (default)
-             - class="glow": White with glow effect
-             - class="contrast": Blue/purple gradient
-             - class="gold": Gold/yellow gradient
-        -->
         <a class="navbar-brand gold" href="index.php">
             ContactFlow
         </a>
@@ -256,6 +316,14 @@
                         <span>New Contact</span>
                     </a>
                 </li>
+                <li class="nav-item ">
+                    <a class="nav-link nav-link-profile" href="profile.php">
+                        <i class="fas fa-plus-circle mr-2"></i>
+                        <span>My Profile</span>
+                    </a>
+            
+            </div>
+        </li>
             </ul>
 
             <!-- User Info -->

@@ -120,6 +120,56 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             margin-right: 15px;
         }
 
+        .contact-details {
+            flex: 1;
+        }
+
+        .contact-name {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+
+        .contact-name strong {
+            font-size: 1.1rem;
+        }
+
+        .contact-fullname {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Visibility Badge Styles */
+        .visibility-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-private {
+            background: rgba(250, 0, 25, 0.6);
+            color: #ffffffff;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+
+        .badge-friends {
+            background: rgba(19, 214, 65, 0.43);
+            color: #ffffffff;
+            border: 1px solid rgba(40, 167, 70, 1);
+        }
+
+        .badge-public {
+            background: rgba(8, 123, 245, 0.54);
+            color: #fcfeffff;
+            border: 1px solid rgba(0, 123, 255, 0.89);
+        }
+
         .action-buttons {
             display: flex;
             justify-content: center;
@@ -280,6 +330,68 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             display: none;
         }
 
+        /* Visibility filter buttons */
+        .visibility-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+        }
+
+        .filter-btn i {
+            font-size: 0.8rem;
+        }
+
+        /* Contact stats */
+        .contact-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .action-buttons {
@@ -304,6 +416,21 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             .search-box .form-control {
                 width: 100%;
+            }
+            
+            .contact-name {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .contact-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .visibility-filter {
+                justify-content: center;
             }
         }
     </style>
@@ -341,6 +468,48 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                 </div>
             </div>
+
+            <!-- Visibility Filter Buttons -->
+            <div class="visibility-filter">
+                <button type="button" class="filter-btn active" data-visibility="all">
+                    <i class="fas fa-globe"></i> All Contacts
+                </button>
+                <button type="button" class="filter-btn" data-visibility="public">
+                    <i class="fas fa-eye"></i> Public
+                </button>
+                <button type="button" class="filter-btn" data-visibility="friends_only">
+                    <i class="fas fa-user-friends"></i> Friends Only
+                </button>
+                <button type="button" class="filter-btn" data-visibility="private">
+                    <i class="fas fa-lock"></i> Private
+                </button>
+            </div>
+
+            <!-- Contact Stats -->
+            <?php 
+            // Count contacts by visibility
+            $stats = [
+                'total' => count($contacts),
+                'public' => 0,
+                'friends_only' => 0,
+                'private' => 0
+            ];
+            
+            foreach ($contacts as $contact) {
+                switch ($contact['visibility']) {
+                    case 'public':
+                        $stats['public']++;
+                        break;
+                    case 'friends_only':
+                        $stats['friends_only']++;
+                        break;
+                    case 'private':
+                        $stats['private']++;
+                        break;
+                }
+            }
+            ?>
+          
 
             <!-- Search results info -->
             <div id="searchInfo" class="alert alert-info" style="background: rgba(23, 162, 184, 0.2); color: white; border: none;">
@@ -436,15 +605,30 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     data-name="<?= htmlspecialchars(strtolower($row['full_name'])) ?>"
                                     data-email="<?= htmlspecialchars(strtolower($row['email'])) ?>"
                                     data-phone="<?= htmlspecialchars(strtolower($row['phone_number'])) ?>"
-                                    data-nickname="<?= htmlspecialchars(strtolower($row['nickname'])) ?>">
+                                    data-nickname="<?= htmlspecialchars(strtolower($row['nickname'])) ?>"
+                                    data-visibility="<?= $row['visibility'] ?>">
                                     <td>
                                         <div class="contact-info">
                                             <div class="contact-avatar">
                                                 <?= strtoupper(substr($row['nickname'], 0, 1)) ?>
                                             </div>
-                                            <div>
-                                                <strong><?= htmlspecialchars($row['nickname']) ?></strong><br>
-                                                <small><?= htmlspecialchars($row['full_name']) ?></small>
+                                            <div class="contact-details">
+                                                <div class="contact-name">
+                                                    <strong><?= htmlspecialchars($row['nickname']) ?></strong>
+                                                    <span class="visibility-badge badge-<?= 
+                                                        $row['visibility'] == 'public' ? 'public' : 
+                                                        ($row['visibility'] == 'friends_only' ? 'friends' : 'private')
+                                                    ?>">
+                                                        <i class="fas fa-<?= 
+                                                            $row['visibility'] == 'public' ? 'eye' : 
+                                                            ($row['visibility'] == 'friends_only' ? 'user-friends' : 'lock')
+                                                        ?>"></i>
+                                                        <?= ucfirst(str_replace('_', ' ', $row['visibility'])) ?>
+                                                    </span>
+                                                </div>
+                                                <div class="contact-fullname">
+                                                    <?= htmlspecialchars($row['full_name']) ?>
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
@@ -498,7 +682,7 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </a>
                 </div>
                 <div class="text-white">
-                    <small><i class="fas fa-info-circle mr-1"></i> Total Contacts: <span id="totalContacts"><?= count($contacts) ?></span></small>
+                    <small><i class="fas fa-info-circle mr-1"></i> Showing: <span id="visibleContacts"><?= count($contacts) ?></span> of <span id="totalContacts"><?= count($contacts) ?></span> contacts</small>
                 </div>
             </div>
         </div>
@@ -510,11 +694,6 @@ include_once "footer.php"
 ?>
 
 <script>
-    console.log("SCRIPT LOADED - Testing");
-alert("Script loaded"); // Remove after test
-console.log("jQuery version:", $.fn.jquery);
-
-
 $(document).ready(function() {
     console.log('Document ready - Search script loaded');
     
@@ -527,58 +706,80 @@ $(document).ready(function() {
     const tableWrapper = $('#tableWrapper');
     const contactRows = $('.contact-row');
     const noResults = $('#noResults');
+    const visibleContacts = $('#visibleContacts');
     const totalContacts = $('#totalContacts');
+    const filterButtons = $('.filter-btn');
     
     // Get initial contact count
     const initialContactCount = <?= count($contacts) ?>;
     let visibleCount = initialContactCount;
+    let currentFilter = 'all';
+    let currentSearch = '';
     
     // Debug
     console.log('Contact rows found:', contactRows.length);
     console.log('Initial count:', initialContactCount);
     
-    // Test if search input exists and is working
-    searchInput.on('input', function() {
-        console.log('Search input detected, value:', $(this).val());
-        performSearch();
+    // Filter buttons click handler
+    filterButtons.on('click', function() {
+        const visibility = $(this).data('visibility');
+        
+        // Update active button
+        filterButtons.removeClass('active');
+        $(this).addClass('active');
+        
+        currentFilter = visibility;
+        applyFilters();
     });
     
     // Search function
     function performSearch() {
-        const searchTerm = searchInput.val().trim().toLowerCase();
-        console.log('Searching for:', searchTerm);
-        
-        if (searchTerm.length === 0) {
-            // Show all rows
-            contactRows.removeClass('hidden');
-            if (tableWrapper.length) tableWrapper.show();
-            noResults.addClass('hidden');
-            searchInfo.hide();
-            clearSearchBtn.hide();
-            searchText.text('Type to search contacts...');
-            searchCount.empty();
-            visibleCount = initialContactCount;
-            updateTotalCount();
-            return;
-        }
-        
+        currentSearch = searchInput.val().trim().toLowerCase();
+        console.log('Searching for:', currentSearch);
+        applyFilters();
+    }
+    
+    // Apply both search and filter
+    function applyFilters() {
         let foundCount = 0;
         
-        // Search through each row
+        // Count contacts by visibility for stats
+        let visibilityCounts = {
+            'all': 0,
+            'public': 0,
+            'friends_only': 0,
+            'private': 0
+        };
+        
+        // Search and filter through each row
         contactRows.each(function() {
             const $row = $(this);
             const name = $row.data('name') || '';
             const email = $row.data('email') || '';
             const phone = $row.data('phone') || '';
             const nickname = $row.data('nickname') || '';
+            const visibility = $row.data('visibility') || '';
             
-            // Check if any field contains the search term
-            const matches = name.includes(searchTerm) || 
-                           email.includes(searchTerm) || 
-                           String(phone).includes(searchTerm) || 
-                           nickname.includes(searchTerm);
+            // Count for stats
+            visibilityCounts['all']++;
+            visibilityCounts[visibility]++;
             
-            if (matches) {
+            // Check search filter
+            let searchMatches = true;
+            if (currentSearch.length > 0) {
+                searchMatches = name.includes(currentSearch) || 
+                               email.includes(currentSearch) || 
+                               String(phone).includes(currentSearch) || 
+                               nickname.includes(currentSearch);
+            }
+            
+            // Check visibility filter
+            let visibilityMatches = true;
+            if (currentFilter !== 'all') {
+                visibilityMatches = (visibility === currentFilter);
+            }
+            
+            if (searchMatches && visibilityMatches) {
                 $row.removeClass('hidden');
                 foundCount++;
             } else {
@@ -587,10 +788,12 @@ $(document).ready(function() {
         });
         
         console.log('Found count:', foundCount);
+        console.log('Visibility counts:', visibilityCounts);
         
         // Update UI
         visibleCount = foundCount;
-        updateTotalCount();
+        visibleContacts.text(foundCount);
+        totalContacts.text(initialContactCount);
         
         // Show/hide table or no results message
         if (foundCount > 0) {
@@ -602,21 +805,53 @@ $(document).ready(function() {
         }
         
         // Update search info
-        searchInfo.show();
-        searchText.html('Showing results for: <strong>"' + searchTerm + '"</strong>');
-        searchCount.html('Found: ' + foundCount + ' contact(s)');
-        clearSearchBtn.show();
-    }
-    
-    // Update total contacts count
-    function updateTotalCount() {
-        totalContacts.text(visibleCount);
+        if (currentSearch.length > 0 || currentFilter !== 'all') {
+            searchInfo.show();
+            let searchTextContent = '';
+            
+            if (currentSearch.length > 0 && currentFilter !== 'all') {
+                searchTextContent = `Showing ${currentFilter.replace('_', ' ')} contacts for: <strong>"${currentSearch}"</strong>`;
+            } else if (currentSearch.length > 0) {
+                searchTextContent = `Showing results for: <strong>"${currentSearch}"</strong>`;
+            } else if (currentFilter !== 'all') {
+                searchTextContent = `Showing only ${currentFilter.replace('_', ' ')} contacts`;
+            }
+            
+            searchText.html(searchTextContent);
+            searchCount.html('Found: ' + foundCount + ' contact(s)');
+            clearSearchBtn.show();
+        } else {
+            searchInfo.hide();
+            clearSearchBtn.hide();
+            searchText.text('Type to search contacts...');
+            searchCount.empty();
+        }
+        
+        // Update filter button counts
+        filterButtons.each(function() {
+            const btnVisibility = $(this).data('visibility');
+            const count = visibilityCounts[btnVisibility] || 0;
+            const icon = $(this).find('i').clone();
+            $(this).html(icon).append(' ' + btnVisibility.replace('_', ' ').charAt(0).toUpperCase() + btnVisibility.replace('_', ' ').slice(1));
+            if (btnVisibility !== 'all') {
+                $(this).append(' <small>(' + count + ')</small>');
+            }
+        });
     }
     
     // Clear search
     function clearSearch() {
         searchInput.val('');
-        performSearch();
+        currentSearch = '';
+        applyFilters();
+    }
+    
+    // Clear filters
+    function clearFilters() {
+        filterButtons.removeClass('active');
+        filterButtons.first().addClass('active');
+        currentFilter = 'all';
+        applyFilters();
     }
     
     // Event handlers
@@ -738,6 +973,9 @@ $(document).ready(function() {
         $('#importResult').hide().empty();
         $('#importBtn').prop('disabled', false).html('<i class="fas fa-upload"></i> Import Contacts');
     });
+    
+    // Initial filter application
+    applyFilters();
 });
 </script>
 

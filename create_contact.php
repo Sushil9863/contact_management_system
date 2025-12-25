@@ -114,6 +114,87 @@ if (!isset($_SESSION['user_id'])) {
             color: rgba(255, 255, 255, 0.7);
         }
 
+        .form-select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: white;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            width: 100%;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px 12px;
+        }
+
+        .form-select:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+        }
+
+        .form-select option {
+            background: #764ba2;
+            color: white;
+        }
+
+        .visibility-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .visibility-info h6 {
+            color: white;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .visibility-info ul {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0;
+            padding-left: 20px;
+            font-size: 0.9rem;
+        }
+
+        .visibility-info li {
+            margin-bottom: 5px;
+        }
+
+        .badge-visibility {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .badge-private {
+            background: rgba(220, 53, 69, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+
+        .badge-friends {
+            background: rgba(40, 167, 69, 0.2);
+            color: #51cf66;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .badge-public {
+            background: rgba(0, 123, 255, 0.2);
+            color: #4dabf7;
+            border: 1px solid rgba(0, 123, 255, 0.3);
+        }
+
         .error {
             color: #ff6b6b;
             font-size: 0.9rem;
@@ -245,7 +326,6 @@ if (!isset($_SESSION['user_id'])) {
                 <input type="text" class="form-control" name="full_name" id="full_name" 
                        placeholder="Enter full name" required>
                 <span id="full_name_error" class="error"></span>
-                <!-- <div class="form-hint">Enter the contact's complete legal name</div> -->
             </div>
 
             <!-- Email -->
@@ -256,7 +336,6 @@ if (!isset($_SESSION['user_id'])) {
                 <input type="email" class="form-control" name="email" id="email" 
                        placeholder="example@domain.com" required>
                 <span id="email_error" class="error"></span>
-                <!-- <div class="form-hint">A valid email address is required</div> -->
             </div>
 
             <!-- Address -->
@@ -267,7 +346,6 @@ if (!isset($_SESSION['user_id'])) {
                 <input type="text" class="form-control" name="address" id="address" 
                        placeholder="Street, City, State, ZIP" required>
                 <span id="address_error" class="error"></span>
-                <!-- <div class="form-hint">Complete mailing address</div> -->
             </div>
 
             <!-- Nickname -->
@@ -278,7 +356,6 @@ if (!isset($_SESSION['user_id'])) {
                 <input type="text" class="form-control" name="nickname" id="nickname" 
                        placeholder="How you'd like to call them" required>
                 <span id="nickname_error" class="error"></span>
-                <!-- <div class="form-hint">A friendly name for quick reference</div> -->
             </div>
 
             <!-- Phone Number -->
@@ -289,7 +366,30 @@ if (!isset($_SESSION['user_id'])) {
                 <input type="text" class="form-control" name="phone_number" id="phone_number" 
                        placeholder="+977 9XXXXXXXXX" required>
                 <span id="phone_number_error" class="error"></span>
-                <!-- <div class="form-hint">Include country code if international</div> -->
+            </div>
+
+            <!-- Visibility -->
+            <div class="form-group">
+                <label for="visibility">
+                    <i class="fas fa-eye"></i> Visibility
+                </label>
+                <select class="form-select" name="visibility" id="visibility" required>
+                    <option value="">Select visibility...</option>
+                    <option value="private">Private <span class="badge-visibility badge-private">Only You</span></option>
+                    <option value="friends_only">Friends Only <span class="badge-visibility badge-friends">Friends Can See</span></option>
+                    <option value="public">Public <span class="badge-visibility badge-public">Everyone Can See</span></option>
+                </select>
+                <span id="visibility_error" class="error"></span>
+                
+                <!-- Visibility Information Box -->
+                <div class="visibility-info">
+                    <h6><i class="fas fa-info-circle mr-2"></i>Visibility Options:</h6>
+                    <ul>
+                        <li><strong>Private:</strong> Only you can see this contact</li>
+                        <li><strong>Friends Only:</strong> Your friends can see this contact</li>
+                        <li><strong>Public:</strong> Anyone can see this contact</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Action Buttons -->
@@ -353,9 +453,16 @@ function validateForm() {
         isValid = false;
     }
     
+    // Validate Visibility
+    const visibility = $('#visibility').val();
+    if (!visibility) {
+        $('#visibility_error').text('Please select a visibility option');
+        isValid = false;
+    }
+    
     // Add visual feedback for invalid fields
     if (!isValid) {
-        $('.form-control').each(function() {
+        $('.form-control, .form-select').each(function() {
             if ($(this).next('.error').text() !== '') {
                 $(this).css('border-color', '#ff6b6b');
             }
@@ -372,9 +479,18 @@ function validateForm() {
 
 // Remove error styling on input
 $(document).ready(function() {
-    $('.form-control').on('input', function() {
+    $('.form-control, .form-select').on('input change', function() {
         $(this).css('border-color', 'rgba(255, 255, 255, 0.2)');
         $(this).next('.error').text('');
+    });
+    
+    // Update badge colors in select options
+    $('#visibility').on('change', function() {
+        const selected = $(this).val();
+        $(this).removeClass('selected-private selected-friends selected-public');
+        if (selected) {
+            $(this).addClass('selected-' + selected);
+        }
     });
 });
 </script>

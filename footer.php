@@ -39,8 +39,7 @@
 <footer class="sticky-footer">
     <div class="container">
         <div class="footer-content">
-            <p>&copy; <?= date('Y') ?> Contact Manager. All rights reserved.</p>
-            <p> Made With <i class="fas fa-heart"></i>  by Kismat Neupane</p>
+            <p>&copy; <?= date('Y') ?> ContactFlow. All rights reserved.</p>
         </div>
     </div>
 </footer>
