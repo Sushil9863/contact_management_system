@@ -312,6 +312,6 @@
                     <?php endif; ?>
                 </div>
             `);
-        <?php endif ?>}
+        <?php endif ?>
     });
 </script>
