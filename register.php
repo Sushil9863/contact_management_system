@@ -151,8 +151,44 @@
             display: block;
             padding: 5px 10px;
             border-radius: 6px;
-            background: rgba(255, 86, 86, 0.15);
+            background: rgb(235 194 194);
             border-left: 3px solid #ff5656;
+        }
+        
+        .success {
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: block;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background: rgb(194 235 194);
+            border-left: 3px solid #4cd964;
+        }
+        
+        .availability-check {
+            margin-top: 5px;
+            font-size: 0.85rem;
+            padding: 5px 10px;
+            border-radius: 6px;
+            display: none;
+        }
+        
+        .availability-check.available {
+            background: rgb(194 235 194);
+            border-left: 3px solid #4cd964;
+            display: block;
+        }
+        
+        .availability-check.taken {
+            background: rgb(235 194 194);
+            border-left: 3px solid #ff5656;
+            display: block;
+        }
+        
+        .availability-check.checking {
+            background: rgb(235 235 194);
+            border-left: 3px solid #ffd656;
+            display: block;
         }
         
         .btn-primary {
@@ -175,6 +211,11 @@
         
         .btn-primary:active {
             transform: translateY(0);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
         
         .login-link {
@@ -306,8 +347,9 @@
                     <input type="text" class="form-control" name="username" id="username" placeholder="Enter your username" required>
                 </div>
                 <span id="username_error" class="text-danger error"></span>
+                <div id="username_availability" class="availability-check"></div>
                 <small class="text-muted" style="color: rgba(255,255,255,0.6) !important; display: block; margin-top: 5px;">
-                    Use only letters, numbers, and underscores
+                    Must start with a letter, then can use letters, numbers, and underscores
                 </small>
             </div>
             
@@ -333,7 +375,7 @@
                 </div>
             </div>
             
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary" id="submitBtn">
                 <i class="fas fa-user-plus"></i> Create Account
             </button>
         </form>
@@ -346,6 +388,11 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script>
         $(document).ready(function() {
+            let isUsernameValid = false;
+            let isPasswordValid = false;
+            let isUsernameAvailable = false;
+            let checkTimeout = null;
+            
             // Floating shapes animation
             for (let i = 0; i < 5; i++) {
                 $('.floating-shapes').append(`
@@ -360,18 +407,44 @@
                 `);
             }
             
+            // Username validation and availability check
             $("#username").on("keyup", function() {
                 var username = $(this).val();
                 var errorSpan = $("#username_error");
+                var availabilityDiv = $("#username_availability");
+                
+                // Clear previous timeout
+                if (checkTimeout) {
+                    clearTimeout(checkTimeout);
+                }
+                
+                // Validate format
                 if (validateUsername(username)) {
                     errorSpan.text("");
                     $(this).css('border-color', 'rgba(76, 217, 100, 0.5)');
+                    isUsernameValid = true;
+                    
+                    // Show checking message
+                    availabilityDiv.removeClass('available taken').addClass('checking');
+                    availabilityDiv.html('<i class="fas fa-spinner fa-spin"></i> Checking availability...');
+                    
+                    // Debounce: Wait 500ms after user stops typing
+                    checkTimeout = setTimeout(function() {
+                        checkUsernameAvailability(username);
+                    }, 500);
+                    
                 } else {
-                    errorSpan.text("Invalid username. Please use only letters, numbers, and underscores.");
+                    errorSpan.text("Username must start with a letter and can contain only letters, numbers, and underscores.");
                     $(this).css('border-color', 'rgba(255, 86, 86, 0.5)');
+                    availabilityDiv.removeClass('available taken checking').html('');
+                    isUsernameValid = false;
+                    isUsernameAvailable = false;
                 }
+                
+                updateSubmitButton();
             });
 
+            // Password validation
             $("#password").on("keyup", function() {
                 var password = $(this).val();
                 var errorSpan = $("#password_error");
@@ -382,15 +455,47 @@
                 if (validatePassword(password)) {
                     errorSpan.text("");
                     $(this).css('border-color', 'rgba(76, 217, 100, 0.5)');
+                    isPasswordValid = true;
                 } else {
                     errorSpan.text("Password must meet all requirements listed below.");
                     $(this).css('border-color', 'rgba(255, 86, 86, 0.5)');
+                    isPasswordValid = false;
                 }
+                
+                updateSubmitButton();
             });
 
+            // Check username availability via AJAX
+            function checkUsernameAvailability(username) {
+                $.ajax({
+                    url: 'check_username.php',
+                    type: 'GET',
+                    data: { username: username },
+                    success: function(response) {
+                        var availabilityDiv = $("#username_availability");
+                        if (response === 'available') {
+                            availabilityDiv.removeClass('checking taken').addClass('available');
+                            availabilityDiv.html('<i class="fas fa-check-circle"></i> Username is available!');
+                            isUsernameAvailable = true;
+                        } else {
+                            availabilityDiv.removeClass('checking available').addClass('taken');
+                            availabilityDiv.html('<i class="fas fa-times-circle"></i> Username is already taken');
+                            isUsernameAvailable = false;
+                        }
+                        updateSubmitButton();
+                    },
+                    error: function() {
+                        var availabilityDiv = $("#username_availability");
+                        availabilityDiv.removeClass('checking available taken').html('');
+                        console.log('Error checking username availability');
+                    }
+                });
+            }
+
             function validateUsername(username) {
-                var usernameRegex = /^[a-zA-Z0-9_]+$/;
-                return usernameRegex.test(username);
+                // Updated regex: must start with a letter, then can contain letters, numbers, underscores
+                var usernameRegex = /^[a-zA-Z][a-zA-Z0-9_]*$/;
+                return usernameRegex.test(username) && username.length >= 3;
             }
 
             function validatePassword(password) {
@@ -423,6 +528,38 @@
                 }
             }
             
+            function updateSubmitButton() {
+                const submitBtn = $('#submitBtn');
+                if (isUsernameValid && isPasswordValid && isUsernameAvailable) {
+                    submitBtn.prop('disabled', false);
+                    submitBtn.css('opacity', '1');
+                } else {
+                    submitBtn.prop('disabled', true);
+                    submitBtn.css('opacity', '0.6');
+                }
+            }
+            
+            // Form submission validation
+            $('#registrationForm').on('submit', function(e) {
+                if (!isUsernameValid || !isPasswordValid || !isUsernameAvailable) {
+                    e.preventDefault();
+                    alert('Please fix all validation errors before submitting.');
+                    return false;
+                }
+                
+                // Show loading state
+                const submitBtn = $('#submitBtn');
+                const originalText = submitBtn.html();
+                submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Creating Account...');
+                submitBtn.prop('disabled', true);
+                
+                // Re-enable after 3 seconds if submission fails
+                setTimeout(function() {
+                    submitBtn.html(originalText);
+                    updateSubmitButton();
+                }, 3000);
+            });
+            
             // Add focus effects
             $('.form-control').on('focus', function() {
                 $(this).parent().parent().find('.form-label').css('color', '#fff');
@@ -431,6 +568,9 @@
             $('.form-control').on('blur', function() {
                 $(this).parent().parent().find('.form-label').css('color', 'rgba(255, 255, 255, 0.9)');
             });
+            
+            // Initialize button state
+            updateSubmitButton();
         });
     </script>
 </body>

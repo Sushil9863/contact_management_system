@@ -334,19 +334,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     <?php endif; ?>
 </div>
 
-<footer class="sticky-footer">
-    <div class="container">
-        <div class="footer-content">
-            <p>&copy; <?= date('Y') ?> Contact Manager. All rights reserved.</p>
-            <!-- <div class="footer-links">
-                <a href="#"><i class="fas fa-shield-alt mr-1"></i> Privacy Policy</a>
-                <a href="#"><i class="fas fa-file-contract mr-1"></i> Terms of Service</a>
-                <a href="#"><i class="fas fa-question-circle mr-1"></i> Help</a>
-                <a href="#"><i class="fas fa-envelope mr-1"></i> Contact Us</a>
-            </div> -->
-        </div>
-    </div>
-</footer>
 
+<?php include_once 'footer.php'?>
 </body>
 </html>
