@@ -1,3 +1,5 @@
+     <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
+
 <style>
     /* Enhanced Glass Navbar with Better Text Visibility */
     .navbar {
@@ -318,7 +320,7 @@
                 </li>
                 <li class="nav-item ">
                     <a class="nav-link nav-link-profile" href="profile.php">
-                        <i class="fas fa-plus-circle mr-2"></i>
+                        <i class="fas fa-user mr-2"></i>
                         <span>My Profile</span>
                     </a>
             

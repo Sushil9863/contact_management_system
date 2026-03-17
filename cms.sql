@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 25, 2025 at 08:44 AM
+-- Generation Time: Dec 25, 2025 at 06:30 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -34,15 +34,25 @@ CREATE TABLE `contacts` (
   `address` varchar(255) NOT NULL,
   `nickname` varchar(50) NOT NULL,
   `phone_number` varchar(50) NOT NULL,
-  `user_id` int(11) NOT NULL
+  `user_id` int(11) NOT NULL,
+  `visibility` enum('private','friends_only','public') DEFAULT 'private',
+  `shared_by` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `contacts`
+-- Table structure for table `friends`
 --
 
-INSERT INTO `contacts` (`id`, `full_name`, `email`, `address`, `nickname`, `phone_number`, `user_id`) VALUES
-(1, 'Sushil Lamichhane', 'lamichhaesushil56@gmail.com', 'Khairahani-3', 'sushil', '9876543210', 1);
+CREATE TABLE `friends` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `friend_id` int(11) NOT NULL,
+  `status` enum('pending','accepted','blocked') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -57,14 +67,6 @@ CREATE TABLE `user_detail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `user_detail`
---
-
-INSERT INTO `user_detail` (`user_id`, `username`, `password`) VALUES
-(1, 'kismat', '$2y$10$EiS9q5C04boUoobqpc6dh.6RJzCjOOV5nNfY1KzdZQNDZCcMVg2JW'),
-(2, 'kismatt', '$2y$10$4QOFWPNXKapmCwrPZagl9eKqjizDWDWxv.VbkEw5Nkou0uUDLkjve');
-
---
 -- Indexes for dumped tables
 --
 
@@ -73,6 +75,14 @@ INSERT INTO `user_detail` (`user_id`, `username`, `password`) VALUES
 --
 ALTER TABLE `contacts`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `friends`
+--
+ALTER TABLE `friends`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_friendship` (`user_id`,`friend_id`),
+  ADD KEY `friend_id` (`friend_id`);
 
 --
 -- Indexes for table `user_detail`
@@ -88,13 +98,30 @@ ALTER TABLE `user_detail`
 -- AUTO_INCREMENT for table `contacts`
 --
 ALTER TABLE `contacts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `friends`
+--
+ALTER TABLE `friends`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `user_detail`
 --
 ALTER TABLE `user_detail`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `friends`
+--
+ALTER TABLE `friends`
+  ADD CONSTRAINT `friends_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_detail` (`user_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `friends_ibfk_2` FOREIGN KEY (`friend_id`) REFERENCES `user_detail` (`user_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

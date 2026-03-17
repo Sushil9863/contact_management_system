@@ -467,14 +467,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <span id="nickname_error" class="error"></span>
                 </div>
 
-                <!-- Phone Number -->
+                <!-- Phone Number (updated placeholder and hint) -->
                 <div class="form-group">
                     <label for="phone_number">
                         <i class="fas fa-phone"></i> Phone Number
                     </label>
                     <input type="text" class="form-control" name="phone_number" id="phone_number" 
                            value="<?= htmlspecialchars($contact['phone_number']); ?>" 
-                           placeholder="+977 9XXXXXXXXX" required>
+                           placeholder="98XXXXXXXX" required>
+                    <small class="form-hint">Exactly 10 digits, must start with 98 or 97</small>
                     <span id="phone_number_error" class="error"></span>
                 </div>
 
@@ -546,70 +547,95 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script>
 function validateForm() {
     let isValid = true;
-    
-    // Clear previous errors
+
+    // Clear previous errors and reset borders
     $('.error').text('');
-    
-    // Validate Full Name
+    $('.form-control, .form-select').css('border-color', '');
+
+    // ---------- Full Name ----------
     const fullName = $('#full_name').val().trim();
+    const nameRegex = /^[A-Za-z\s\-']+$/;
     if (fullName.length < 2) {
         $('#full_name_error').text('Full name must be at least 2 characters long');
         isValid = false;
+    } else if (!nameRegex.test(fullName)) {
+        $('#full_name_error').text('Full name can only contain letters, spaces, hyphens, and apostrophes');
+        isValid = false;
     }
-    
-    // Validate Email
+
+    // ---------- Email ----------
     const email = $('#email').val().trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-        $('#email_error').text('Please enter a valid email address');
+        $('#email_error').text('Please enter a valid email address (e.g., name@example.com)');
         isValid = false;
+    } else {
+        const [localPart, domain] = email.split('@');
+        // Reject if local part is all digits
+        if (/^\d+$/.test(localPart)) {
+            $('#email_error').text('Email local part cannot be all digits');
+            isValid = false;
+        }
+        // Reject if domain part before the first dot is all digits (e.g., 000.com)
+        const domainParts = domain.split('.');
+        if (domainParts[0] && /^\d+$/.test(domainParts[0])) {
+            $('#email_error').text('Email domain cannot be all digits');
+            isValid = false;
+        }
     }
-    
-    // Validate Address
+
+    // ---------- Address ----------
     const address = $('#address').val().trim();
+    const addressRegex = /^[A-Za-z0-9\s,.\-]+$/;
     if (address.length < 5) {
         $('#address_error').text('Address must be at least 5 characters long');
         isValid = false;
+    } else if (!addressRegex.test(address)) {
+        $('#address_error').text('Address contains invalid characters');
+        isValid = false;
     }
-    
-    // Validate Nickname
+
+    // ---------- Nickname ----------
     const nickname = $('#nickname').val().trim();
-    if (nickname.length < 2) {
-        $('#nickname_error').text('Nickname must be at least 2 characters long');
+    if (nickname.length < 1) {
+        $('#nickname_error').text('Nickname is required');
         isValid = false;
     }
-    
-    // Validate Phone Number
+
+    // ---------- Phone Number (exactly 10 digits, starts with 98 or 97) ----------
     const phone = $('#phone_number').val().trim();
-    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-    const cleanPhone = phone.replace(/[\s\(\)\-]/g, '');
-    
-    if (!phoneRegex.test(cleanPhone)) {
-        $('#phone_number_error').text('Please enter a valid phone number');
+    const digitsOnly = phone.replace(/\D/g, ''); // remove all non-digits
+
+    if (digitsOnly.length !== 10) {
+        $('#phone_number_error').text('Phone number must be exactly 10 digits');
+        isValid = false;
+    } else if (!/^(98|97)/.test(digitsOnly)) {
+        $('#phone_number_error').text('Phone number must start with 98 or 97');
         isValid = false;
     }
-    
-    // Validate Visibility
+
+    // ---------- Visibility ----------
     const visibility = $('#visibility').val();
     if (!visibility) {
         $('#visibility_error').text('Please select a visibility option');
         isValid = false;
     }
-    
-    // Add visual feedback for invalid fields
+
+    // ---------- Visual feedback for invalid fields ----------
     if (!isValid) {
         $('.form-control, .form-select').each(function() {
-            if ($(this).next('.error').text() !== '') {
+            const fieldId = $(this).attr('id');
+            if ($('#' + fieldId + '_error').text() !== '') {
                 $(this).css('border-color', '#ff6b6b');
             }
         });
-        
-        // Scroll to first error
+
+        // Scroll to the first error message
         $('html, body').animate({
             scrollTop: $('.error:visible').first().offset().top - 100
         }, 500);
     }
-    
+
     return isValid;
 }
 

@@ -1,7 +1,4 @@
 <?php
-// ========================
-// MUST BE AT TOP – NO HTML BEFORE THIS
-// ========================
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -36,17 +33,14 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.3/css/all.min.css">
+    <!-- Font Awesome (local) -->
+    <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
 
     <style>
-        .glass-container {
-            backdrop-filter: none !important;
-        }
+        /* Global & glass container */
         html, body {
             height: 100%;
         }
-
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -55,11 +49,9 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             min-height: 100vh;
             margin: 0;
         }
-
         .main-container {
             flex: 1 0 auto;
         }
-
         .glass-container {
             background: rgba(255, 255, 255, 0.15);
             border-radius: 25px;
@@ -67,8 +59,8 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 40px;
             margin-top: 50px;
             margin-bottom: 30px;
+            backdrop-filter: blur(10px);
         }
-
         h1 {
             color: white;
             font-weight: 700;
@@ -77,202 +69,27 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding-bottom: 15px;
         }
 
-        .glass-table {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        .glass-table th,
-        .glass-table td {
-            color: white;
-            border: none;
-            padding: 15px;
-            vertical-align: middle;
-        }
-
-        .glass-table tbody tr {
-            display: table-row;
-        }
-
-        .glass-table tbody tr.hidden {
-            display: none;
-        }
-
-        .glass-table tbody tr:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .contact-info {
-            display: flex;
-            align-items: center;
-        }
-
-        .contact-avatar {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 15px;
-        }
-
-        .contact-details {
-            flex: 1;
-        }
-
-        .contact-name {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 5px;
-        }
-
-        .contact-name strong {
-            font-size: 1.1rem;
-        }
-
-        .contact-fullname {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        /* Visibility Badge Styles */
-        .visibility-badge {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .badge-private {
-            background: rgba(250, 0, 25, 0.6);
-            color: #ffffffff;
-            border: 1px solid rgba(220, 53, 69, 0.3);
-        }
-
-        .badge-friends {
-            background: rgba(19, 214, 65, 0.43);
-            color: #ffffffff;
-            border: 1px solid rgba(40, 167, 70, 1);
-        }
-
-        .badge-public {
-            background: rgba(8, 123, 245, 0.54);
-            color: #fcfeffff;
-            border: 1px solid rgba(0, 123, 255, 0.89);
-        }
-
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .action-btn {
-            padding: 8px 15px;
-            border-radius: 50px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border: none;
-            min-width: 90px;
-        }
-
-        .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            text-decoration: none;
-            color: white;
-        }
-
-        .view-btn { 
-            background: linear-gradient(135deg, #17a2b8, #138496);
-        }
-        .view-btn:hover {
-            background: linear-gradient(135deg, #138496, #117a8b);
-        }
-
-        .edit-btn { 
-            background: linear-gradient(135deg, #007bff, #0069d9);
-        }
-        .edit-btn:hover {
-            background: linear-gradient(135deg, #0069d9, #0056b3);
-        }
-
-        .delete-btn { 
-            background: linear-gradient(135deg, #dc3545, #c82333);
-        }
-        .delete-btn:hover {
-            background: linear-gradient(135deg, #c82333, #bd2130);
-        }
-
-        .btn-icon {
-            margin-right: 5px;
-            font-size: 0.85rem;
-        }
-
-        .create-btn {
-            margin-top: 25px;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            background: linear-gradient(135deg, #28a745, #218838);
-            border: none;
-            transition: all 0.3s;
-        }
-
-        .create-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            background: linear-gradient(135deg, #218838, #1e7e34);
-        }
-
-        .empty-state {
-            text-align: center;
-            color: white;
-            padding: 60px;
-        }
-
-        .empty-state.hidden {
-            display: none;
-        }
-
+        /* Import/Export bar */
         .import-export-buttons {
             margin-bottom: 20px;
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
         }
-
         .import-export-buttons .btn {
             border-radius: 50px;
             padding: 10px 20px;
             font-weight: 500;
         }
 
-        /* Search bar styles */
+        /* Search bar */
         .search-container {
             flex-grow: 1;
             max-width: 400px;
         }
-
         .search-box {
             position: relative;
         }
-
         .search-box .form-control {
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -282,18 +99,15 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             height: calc(1.5em + 1.25rem);
             transition: all 0.3s;
         }
-
         .search-box .form-control::placeholder {
             color: rgba(255, 255, 255, 0.7);
         }
-
         .search-box .form-control:focus {
             background: rgba(255, 255, 255, 0.25);
             border-color: rgba(255, 255, 255, 0.5);
             box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
             color: white;
         }
-
         .search-btn {
             position: absolute;
             right: 10px;
@@ -305,11 +119,9 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             cursor: pointer;
             padding: 5px;
         }
-
         .search-btn:hover {
             color: white;
         }
-
         .clear-search {
             display: inline-flex;
             align-items: center;
@@ -318,7 +130,6 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             text-decoration: none;
             opacity: 0.8;
         }
-
         .clear-search:hover {
             opacity: 1;
             text-decoration: none;
@@ -337,7 +148,6 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
-
         .filter-btn {
             padding: 8px 16px;
             border-radius: 20px;
@@ -350,17 +160,14 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             align-items: center;
             gap: 5px;
         }
-
         .filter-btn:hover {
             background: rgba(255, 255, 255, 0.2);
             transform: translateY(-2px);
         }
-
         .filter-btn.active {
             background: rgba(255, 255, 255, 0.3);
             font-weight: 600;
         }
-
         .filter-btn i {
             font-size: 0.8rem;
         }
@@ -372,7 +179,6 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
-
         .stat-item {
             background: rgba(255, 255, 255, 0.1);
             padding: 10px 20px;
@@ -381,54 +187,203 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             align-items: center;
             gap: 10px;
         }
-
         .stat-value {
             font-size: 1.5rem;
             font-weight: 700;
         }
-
         .stat-label {
             font-size: 0.9rem;
             opacity: 0.8;
         }
 
-        /* Responsive adjustments */
+        /* Contact cards grid */
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .contact-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .contact-card.hidden {
+            display: none;
+        }
+
+        /* Card header: avatar + name + heart */
+        .card-header-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .contact-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+        }
+        .name-and-fav {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .contact-nickname {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0;
+            line-height: 1.2;
+        }
+        .favorite-toggle {
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .favorite-toggle:hover {
+            transform: scale(1.15);
+        }
+        .favorite-toggle i {
+            font-size: 1.6rem;
+        }
+
+        /* Visibility badge */
+        .visibility-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .badge-private {
+            background: rgba(220, 53, 69, 0.3);
+        }
+        .badge-friends {
+            background: rgba(40, 167, 69, 0.3);
+        }
+        .badge-public {
+            background: rgba(0, 123, 255, 0.3);
+        }
+
+        /* Card body */
+        .contact-fullname {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        .contact-phone {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            background: rgba(0,0,0,0.1);
+            padding: 8px 12px;
+            border-radius: 30px;
+            width: fit-content;
+        }
+
+        /* Action buttons row */
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: auto;
+        }
+        .action-btn {
+            padding: 8px 15px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            flex: 1;
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            color: white;
+        }
+        .view-btn { background: linear-gradient(135deg, #17a2b8, #138496); }
+        .edit-btn { background: linear-gradient(135deg, #007bff, #0069d9); }
+        .delete-btn { background: linear-gradient(135deg, #dc3545, #c82333); }
+        .btn-icon { margin-right: 5px; font-size: 0.85rem; }
+
+        /* Empty states */
+        .empty-state {
+            text-align: center;
+            color: white;
+            padding: 60px;
+        }
+        .empty-state.hidden {
+            display: none;
+        }
+
+        /* Create button */
+        .create-btn {
+            margin-top: 25px;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #28a745, #218838);
+            border: none;
+            transition: all 0.3s;
+        }
+        .create-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .action-buttons {
-                flex-direction: column;
-                gap: 8px;
+            .contacts-grid {
+                grid-template-columns: 1fr;
             }
-            
-            .action-btn {
-                min-width: 100%;
-                padding: 10px;
-            }
-            
             .import-export-buttons {
                 flex-direction: column;
             }
-            
             .import-export-buttons .btn,
             .search-container {
                 width: 100%;
                 max-width: 100%;
             }
-            
-            .search-box .form-control {
-                width: 100%;
-            }
-            
-            .contact-name {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-            
             .contact-stats {
                 flex-direction: column;
                 gap: 10px;
             }
-            
             .visibility-filter {
                 justify-content: center;
             }
@@ -469,7 +424,7 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
 
-            <!-- Visibility Filter Buttons -->
+            <!-- Visibility Filter Buttons (including Favorites) -->
             <div class="visibility-filter">
                 <button type="button" class="filter-btn active" data-visibility="all">
                     <i class="fas fa-globe"></i> All Contacts
@@ -483,45 +438,23 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <button type="button" class="filter-btn" data-visibility="private">
                     <i class="fas fa-lock"></i> Private
                 </button>
+                <!-- New Favorites button -->
+                <button type="button" class="filter-btn" data-visibility="favorite">
+                    <i class="fas fa-heart" style="color: #ff4444;"></i> Favorites
+                </button>
             </div>
-
-            <!-- Contact Stats -->
-            <?php 
-            // Count contacts by visibility
-            $stats = [
-                'total' => count($contacts),
-                'public' => 0,
-                'friends_only' => 0,
-                'private' => 0
-            ];
-            
-            foreach ($contacts as $contact) {
-                switch ($contact['visibility']) {
-                    case 'public':
-                        $stats['public']++;
-                        break;
-                    case 'friends_only':
-                        $stats['friends_only']++;
-                        break;
-                    case 'private':
-                        $stats['private']++;
-                        break;
-                }
-            }
-            ?>
-          
 
             <!-- Search results info -->
             <div id="searchInfo" class="alert alert-info" style="background: rgba(23, 162, 184, 0.2); color: white; border: none;">
                 <i class="fas fa-search mr-2"></i>
                 <span id="searchText">Type to search contacts...</span>
-                <a href="javascript:void(0)" id="clearSearch" class="clear-search" style="display: none;">
+                <!-- <a href="javascript:void(0)" id="clearSearch" class="clear-search" style="display: none;">
                     <i class="fas fa-times ml-2"></i> Clear search
-                </a>
+                </a> -->
                 <span id="searchCount" class="float-right"></span>
             </div>
 
-            <!-- Import Modal -->
+            <!-- Import Modal (unchanged) -->
             <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -586,75 +519,75 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
 
-            <h1><i class="fas fa-address-book mr-3"></i>Contact List</h1>
+            <h1><i class="fas fa-address-book mr-3"></i>My Contacts</h1>
 
-            <!-- Contacts table -->
+            <!-- Contacts Grid (cards) -->
             <?php if ($contacts && count($contacts) > 0): ?>
-                <div class="table-responsive" id="tableWrapper">
-                    <table class="table glass-table" id="contactsTable">
-                        <thead>
-                            <tr>
-                                <th>Contact</th>
-                                <th>Phone Number</th>
-                                <th class="text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($contacts as $row): ?>
-                                <tr class="contact-row" 
-                                    data-name="<?= htmlspecialchars(strtolower($row['full_name'])) ?>"
-                                    data-email="<?= htmlspecialchars(strtolower($row['email'])) ?>"
-                                    data-phone="<?= htmlspecialchars(strtolower($row['phone_number'])) ?>"
-                                    data-nickname="<?= htmlspecialchars(strtolower($row['nickname'])) ?>"
-                                    data-visibility="<?= $row['visibility'] ?>">
-                                    <td>
-                                        <div class="contact-info">
-                                            <div class="contact-avatar">
-                                                <?= strtoupper(substr($row['nickname'], 0, 1)) ?>
-                                            </div>
-                                            <div class="contact-details">
-                                                <div class="contact-name">
-                                                    <strong><?= htmlspecialchars($row['nickname']) ?></strong>
-                                                    <span class="visibility-badge badge-<?= 
-                                                        $row['visibility'] == 'public' ? 'public' : 
-                                                        ($row['visibility'] == 'friends_only' ? 'friends' : 'private')
-                                                    ?>">
-                                                        <i class="fas fa-<?= 
-                                                            $row['visibility'] == 'public' ? 'eye' : 
-                                                            ($row['visibility'] == 'friends_only' ? 'user-friends' : 'lock')
-                                                        ?>"></i>
-                                                        <?= ucfirst(str_replace('_', ' ', $row['visibility'])) ?>
-                                                    </span>
-                                                </div>
-                                                <div class="contact-fullname">
-                                                    <?= htmlspecialchars($row['full_name']) ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-phone mr-2"></i>
-                                        <?= htmlspecialchars($row['phone_number']) ?>
-                                    </td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <a href="personal_info.php?id=<?= $row['id'] ?>" class="action-btn view-btn">
-                                                <i class="fas fa-eye btn-icon"></i>View
-                                            </a>
-                                            <a href="edit_contact.php?id=<?= $row['id'] ?>" class="action-btn edit-btn">
-                                                <i class="fas fa-edit btn-icon"></i>Edit
-                                            </a>
-                                            <a href="delete_contact.php?id=<?= $row['id'] ?>"
-                                               class="action-btn delete-btn"
-                                               onclick="return confirm('Delete this contact?')">
-                                                <i class="fas fa-trash btn-icon"></i>Delete
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                <div class="contacts-grid" id="contactsGrid">
+                    <?php foreach ($contacts as $row): ?>
+                        <div class="contact-card contact-row" 
+                             data-name="<?= htmlspecialchars(strtolower($row['full_name'])) ?>"
+                             data-email="<?= htmlspecialchars(strtolower($row['email'])) ?>"
+                             data-phone="<?= htmlspecialchars(strtolower($row['phone_number'])) ?>"
+                             data-nickname="<?= htmlspecialchars(strtolower($row['nickname'])) ?>"
+                             data-visibility="<?= $row['visibility'] ?>"
+                             data-favorite="<?= $row['is_favorite'] ?>">   <!-- added data-favorite -->
+                            
+                            <!-- Header row with avatar, name and heart -->
+                            <div class="card-header-row">
+                                <div class="contact-avatar">
+                                    <?= strtoupper(substr($row['nickname'], 0, 1)) ?>
+                                </div>
+                                <div class="name-and-fav">
+                                    <span class="contact-nickname"><?= htmlspecialchars($row['nickname']) ?></span>
+                                    <a href="javascript:void(0)"
+                                       class="favorite-toggle"
+                                       data-id="<?= $row['id'] ?>"
+                                       data-favorite="<?= $row['is_favorite'] ?>"
+                                       title="<?= $row['is_favorite'] ? 'Remove from favorites' : 'Add to favorites' ?>">
+                                        <i class="<?= $row['is_favorite'] ? 'fas' : 'far' ?> fa-heart"
+                                           style="color: <?= $row['is_favorite'] ? '#ff4444' : '#555555' ?>; font-size: 1.5rem;"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Full name & visibility badge -->
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="contact-fullname"><?= htmlspecialchars($row['full_name']) ?></span>
+                                <span class="visibility-badge badge-<?= 
+                                    $row['visibility'] == 'public' ? 'public' : 
+                                    ($row['visibility'] == 'friends_only' ? 'friends' : 'private')
+                                ?>">
+                                    <i class="fas fa-<?= 
+                                        $row['visibility'] == 'public' ? 'eye' : 
+                                        ($row['visibility'] == 'friends_only' ? 'user-friends' : 'lock')
+                                    ?>"></i>
+                                    <?= ucfirst(str_replace('_', ' ', $row['visibility'])) ?>
+                                </span>
+                            </div>
+
+                            <!-- Phone number -->
+                            <div class="contact-phone">
+                                <i class="fas fa-phone-alt"></i>
+                                <?= htmlspecialchars($row['phone_number']) ?>
+                            </div>
+
+                            <!-- Action buttons -->
+                            <div class="card-actions">
+                                <a href="personal_info.php?id=<?= $row['id'] ?>" class="action-btn view-btn">
+                                    <i class="fas fa-eye btn-icon"></i>View
+                                </a>
+                                <a href="edit_contact.php?id=<?= $row['id'] ?>" class="action-btn edit-btn">
+                                    <i class="fas fa-edit btn-icon"></i>Edit
+                                </a>
+                                <a href="delete_contact.php?id=<?= $row['id'] ?>"
+                                   class="action-btn delete-btn"
+                                   onclick="return confirm('Delete this contact?')">
+                                    <i class="fas fa-trash btn-icon"></i>Delete
+                                </a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
                 
                 <!-- Empty search state (hidden by default) -->
@@ -670,7 +603,7 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <!-- No contacts at all -->
                 <div class="empty-state">
                     <i class="fas fa-users fa-4x mb-3"></i>
-                    <h3>No contacts found</h3>
+                    <h3>No contacts yet</h3>
                     <p>Add your first contact or import from CSV</p>
                 </div>
             <?php endif; ?>
@@ -689,80 +622,59 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-<?php
-include_once "footer.php"
-?>
+<?php include_once "footer.php"; ?>
 
 <script>
 $(document).ready(function() {
-    console.log('Document ready - Search script loaded');
-    
-    // Variables
+    // ---------- Search & Filter ----------
     const searchInput = $('#searchInput');
     const searchInfo = $('#searchInfo');
     const searchText = $('#searchText');
     const searchCount = $('#searchCount');
     const clearSearchBtn = $('#clearSearch');
-    const tableWrapper = $('#tableWrapper');
-    const contactRows = $('.contact-row');
+    const contactCards = $('.contact-row');
     const noResults = $('#noResults');
     const visibleContacts = $('#visibleContacts');
     const totalContacts = $('#totalContacts');
     const filterButtons = $('.filter-btn');
     
-    // Get initial contact count
     const initialContactCount = <?= count($contacts) ?>;
-    let visibleCount = initialContactCount;
     let currentFilter = 'all';
     let currentSearch = '';
     
-    // Debug
-    console.log('Contact rows found:', contactRows.length);
-    console.log('Initial count:', initialContactCount);
-    
-    // Filter buttons click handler
+    // Filter buttons click
     filterButtons.on('click', function() {
         const visibility = $(this).data('visibility');
-        
-        // Update active button
         filterButtons.removeClass('active');
         $(this).addClass('active');
-        
         currentFilter = visibility;
         applyFilters();
     });
     
-    // Search function
     function performSearch() {
         currentSearch = searchInput.val().trim().toLowerCase();
-        console.log('Searching for:', currentSearch);
         applyFilters();
     }
     
-    // Apply both search and filter
     function applyFilters() {
         let foundCount = 0;
+        let visibilityCounts = { all: 0, public: 0, friends_only: 0, private: 0, favorite: 0 };
         
-        // Count contacts by visibility for stats
-        let visibilityCounts = {
-            'all': 0,
-            'public': 0,
-            'friends_only': 0,
-            'private': 0
-        };
-        
-        // Search and filter through each row
-        contactRows.each(function() {
-            const $row = $(this);
-            const name = $row.data('name') || '';
-            const email = $row.data('email') || '';
-            const phone = $row.data('phone') || '';
-            const nickname = $row.data('nickname') || '';
-            const visibility = $row.data('visibility') || '';
+        contactCards.each(function() {
+            const $card = $(this);
+            const name = $card.data('name') || '';
+            const email = $card.data('email') || '';
+            const phone = $card.data('phone') || '';
+            const nickname = $card.data('nickname') || '';
+            const visibility = $card.data('visibility') || '';
+            const favorite = $card.data('favorite') || 0;
             
-            // Count for stats
-            visibilityCounts['all']++;
-            visibilityCounts[visibility]++;
+            // Count for stats (excluding favorite because it's not a visibility type)
+            visibilityCounts.all++;
+            if (visibility === 'public') visibilityCounts.public++;
+            else if (visibility === 'friends_only') visibilityCounts.friends_only++;
+            else if (visibility === 'private') visibilityCounts.private++;
+            if (favorite == 1) visibilityCounts.favorite++;
             
             // Check search filter
             let searchMatches = true;
@@ -773,130 +685,94 @@ $(document).ready(function() {
                                nickname.includes(currentSearch);
             }
             
-            // Check visibility filter
-            let visibilityMatches = true;
-            if (currentFilter !== 'all') {
-                visibilityMatches = (visibility === currentFilter);
+            // Check filter (visibility or favorite)
+            let filterMatches = true;
+            if (currentFilter === 'favorite') {
+                filterMatches = (favorite == 1);
+            } else if (currentFilter !== 'all') {
+                filterMatches = (visibility === currentFilter);
             }
             
-            if (searchMatches && visibilityMatches) {
-                $row.removeClass('hidden');
+            if (searchMatches && filterMatches) {
+                $card.removeClass('hidden');
                 foundCount++;
             } else {
-                $row.addClass('hidden');
+                $card.addClass('hidden');
             }
         });
         
-        console.log('Found count:', foundCount);
-        console.log('Visibility counts:', visibilityCounts);
-        
-        // Update UI
-        visibleCount = foundCount;
         visibleContacts.text(foundCount);
         totalContacts.text(initialContactCount);
         
-        // Show/hide table or no results message
         if (foundCount > 0) {
-            if (tableWrapper.length) tableWrapper.show();
             noResults.addClass('hidden');
         } else {
-            if (tableWrapper.length) tableWrapper.hide();
             noResults.removeClass('hidden');
         }
         
-        // Update search info
+        // Update search info bar
         if (currentSearch.length > 0 || currentFilter !== 'all') {
             searchInfo.show();
-            let searchTextContent = '';
-            
+            let msg = '';
             if (currentSearch.length > 0 && currentFilter !== 'all') {
-                searchTextContent = `Showing ${currentFilter.replace('_', ' ')} contacts for: <strong>"${currentSearch}"</strong>`;
+                let filterName = currentFilter === 'favorite' ? 'favorites' : currentFilter.replace('_', ' ');
+                msg = `Showing ${filterName} for: <strong>"${currentSearch}"</strong>`;
             } else if (currentSearch.length > 0) {
-                searchTextContent = `Showing results for: <strong>"${currentSearch}"</strong>`;
+                msg = `Showing results for: <strong>"${currentSearch}"</strong>`;
             } else if (currentFilter !== 'all') {
-                searchTextContent = `Showing only ${currentFilter.replace('_', ' ')} contacts`;
+                let filterName = currentFilter === 'favorite' ? 'favorites' : currentFilter.replace('_', ' ');
+                msg = `Showing only ${filterName}`;
             }
-            
-            searchText.html(searchTextContent);
+            searchText.html(msg);
             searchCount.html('Found: ' + foundCount + ' contact(s)');
             clearSearchBtn.show();
         } else {
             searchInfo.hide();
             clearSearchBtn.hide();
-            searchText.text('Type to search contacts...');
-            searchCount.empty();
         }
         
-        // Update filter button counts
+        // Update filter button counts (for non-favorite filters)
         filterButtons.each(function() {
-            const btnVisibility = $(this).data('visibility');
-            const count = visibilityCounts[btnVisibility] || 0;
+            const btnVis = $(this).data('visibility');
+            const cnt = visibilityCounts[btnVis] || 0;
             const icon = $(this).find('i').clone();
-            $(this).html(icon).append(' ' + btnVisibility.replace('_', ' ').charAt(0).toUpperCase() + btnVisibility.replace('_', ' ').slice(1));
-            if (btnVisibility !== 'all') {
-                $(this).append(' <small>(' + count + ')</small>');
+            let text = btnVis === 'all' ? 'All Contacts' : 
+                       (btnVis === 'favorite' ? 'Favorites' : 
+                       btnVis.replace('_',' ').charAt(0).toUpperCase() + btnVis.replace('_',' ').slice(1));
+            $(this).html(icon).append(' ' + text);
+            if (btnVis !== 'all') {
+                $(this).append(' <small>(' + cnt + ')</small>');
             }
         });
     }
     
-    // Clear search
     function clearSearch() {
         searchInput.val('');
         currentSearch = '';
         applyFilters();
     }
     
-    // Clear filters
-    function clearFilters() {
-        filterButtons.removeClass('active');
-        filterButtons.first().addClass('active');
-        currentFilter = 'all';
-        applyFilters();
-    }
+    // Event listeners
+    searchInput.on('keyup', performSearch);
+    $('.search-btn').on('click', performSearch);
+    clearSearchBtn.on('click', clearSearch);
+    searchInput.on('keydown', function(e) { if (e.key === 'Escape') clearSearch(); });
     
-    // Event handlers
-    searchInput.on('keyup', function() {
-        performSearch();
-    });
-    
-    $('.search-btn').on('click', function() {
-        performSearch();
-    });
-    
-    clearSearchBtn.on('click', function() {
-        clearSearch();
-    });
-    
-    // Clear search when pressing Escape
-    searchInput.on('keydown', function(e) {
-        if (e.key === 'Escape') {
-            clearSearch();
-            $(this).blur();
-        }
-    });
-
-    // ========== Existing code for import modal ==========
-    // Update file label when file is selected
+    // ---------- Import Modal ----------
     $('#csvFile').on('change', function() {
-        var fileName = $(this).val().split('\\').pop();
-        $('#fileLabel').text(fileName || 'Choose file');
+        $('#fileLabel').text($(this).val().split('\\').pop() || 'Choose file');
     });
     
-    // Handle form submission with AJAX
     $('#importForm').on('submit', function(e) {
         e.preventDefault();
-        
         var formData = new FormData(this);
         var importBtn = $('#importBtn');
         var originalText = importBtn.html();
         
-        // Show progress
         $('#importProgress').show();
         $('#importResult').hide().empty();
-        importBtn.prop('disabled', true);
-        importBtn.html('<i class="fas fa-spinner fa-spin"></i> Importing...');
+        importBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Importing...');
         
-        // Submit via AJAX
         $.ajax({
             url: 'import_contacts.php',
             type: 'POST',
@@ -905,10 +781,8 @@ $(document).ready(function() {
             processData: false,
             success: function(response) {
                 $('#importProgress').hide();
-                
                 try {
                     var result = JSON.parse(response);
-                    
                     if (result.success) {
                         $('#importResult').html(`
                             <div class="alert alert-success">
@@ -916,62 +790,80 @@ $(document).ready(function() {
                                 <p><strong>Imported:</strong> ${result.imported} contacts</p>
                                 <p><strong>Skipped:</strong> ${result.skipped} duplicates</p>
                                 ${result.errors > 0 ? `<p><strong>Errors:</strong> ${result.errors} rows</p>` : ''}
-                                ${result.error_details && result.error_details.length > 0 ? 
-                                    `<div class="mt-2"><small><strong>Error details:</strong><br>${result.error_details.join('<br>')}</small></div>` : ''}
+                                ${result.error_details ? `<div><small>${result.error_details.join('<br>')}</small></div>` : ''}
                             </div>
                         `);
-                        
-                        // Close modal after 3 seconds and refresh page
-                        setTimeout(function() {
-                            $('#importModal').modal('hide');
-                            location.reload(); // Simple page reload
-                        }, 3000);
+                        setTimeout(() => { $('#importModal').modal('hide'); location.reload(); }, 3000);
                     } else {
                         $('#importResult').html(`
                             <div class="alert alert-danger">
                                 <h5><i class="fas fa-exclamation-circle"></i> Import Failed</h5>
                                 <p>${result.message}</p>
-                                ${result.error_details && result.error_details.length > 0 ? 
-                                    `<div class="mt-2"><small><strong>Errors:</strong><br>${result.error_details.join('<br>')}</small></div>` : ''}
+                                ${result.error_details ? `<small>${result.error_details.join('<br>')}</small>` : ''}
                             </div>
                         `);
                     }
                 } catch (e) {
-                    console.error('Error parsing response:', response);
-                    $('#importResult').html(`
-                        <div class="alert alert-danger">
-                            <h5>Error Processing Response</h5>
-                            <p>Server returned invalid JSON. Please check console for details.</p>
-                        </div>
-                    `);
+                    $('#importResult').html('<div class="alert alert-danger">Invalid server response.</div>');
                 }
-                
                 $('#importResult').show();
-                importBtn.prop('disabled', false);
-                importBtn.html(originalText);
+                importBtn.prop('disabled', false).html(originalText);
             },
-            error: function(xhr, status, error) {
+            error: function() {
                 $('#importProgress').hide();
-                $('#importResult').html(`
-                    <div class="alert alert-danger">
-                        <h5>Server Error</h5>
-                        <p>Unable to process import. Please try again.</p>
-                        <small>Error: ${error}</small>
-                    </div>
-                `).show();
-                importBtn.prop('disabled', false);
-                importBtn.html(originalText);
+                $('#importResult').html('<div class="alert alert-danger">Server error. Please try again.</div>').show();
+                importBtn.prop('disabled', false).html(originalText);
             }
         });
     });
     
-    // Reset form when modal closes
     $('#importModal').on('hidden.bs.modal', function() {
         $('#importForm')[0].reset();
         $('#fileLabel').text('Choose file');
         $('#importProgress').hide();
         $('#importResult').hide().empty();
         $('#importBtn').prop('disabled', false).html('<i class="fas fa-upload"></i> Import Contacts');
+    });
+    
+    // ---------- Favorite Toggle ----------
+    $(document).on('click', '.favorite-toggle', function(e) {
+        e.preventDefault();
+        const $link = $(this);
+        const contactId = $link.data('id');
+        const $icon = $link.find('i');
+        
+        $link.css('pointer-events', 'none');
+        
+        $.ajax({
+            url: 'toggle_favorite.php',
+            type: 'POST',
+            data: { contact_id: contactId },
+            dataType: 'json',
+            success: function(res) {
+                if (res.success) {
+                    const newFav = res.new_favorite;
+                    $link.data('favorite', newFav);
+                    $link.attr('title', newFav ? 'Remove from favorites' : 'Add to favorites');
+                    // Also update the data-favorite attribute on the parent card for filter
+                    $link.closest('.contact-card').attr('data-favorite', newFav);
+                    if (newFav == 1) {
+                        $icon.removeClass('far').addClass('fas').css('color', '#ff4444');
+                    } else {
+                        $icon.removeClass('fas').addClass('far').css('color', '#555555');
+                    }
+                    // Reapply filters to reflect the change (if favorite filter is active)
+                    applyFilters();
+                } else {
+                    alert('Error: ' + res.message);
+                }
+            },
+            error: function() {
+                alert('AJAX error.');
+            },
+            complete: function() {
+                $link.css('pointer-events', 'auto');
+            }
+        });
     });
     
     // Initial filter application
